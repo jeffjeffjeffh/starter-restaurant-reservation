@@ -16,11 +16,20 @@ async function list(req, res, next) {
   } else {
     next({
       status: 404,
-      message: `No reservations found for date ${date}`
-    })
+      message: `No reservations found for date ${date}`,
+    });
   }
+}
+
+async function create(req, res, next) {
+  const response = await service.create(req.body);
+
+  res.status(201).json({
+    data: response,
+  });
 }
 
 module.exports = {
   list: asyncErrorBoundary(list),
+  create: asyncErrorBoundary(create),
 };
