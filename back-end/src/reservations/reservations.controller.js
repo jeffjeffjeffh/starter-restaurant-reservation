@@ -2,20 +2,25 @@
  * List handler for reservation resources
  */
 
+const service = require("./reservations.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
-function validateDate(req, res, next) {
+async function list(req, res, next) {
   const { date } = req.query;
-  console.log(date);
-  return next();
-}
+  const data = await service.read(date);
 
-async function list(req, res) {
-  res.json({
-    data: [],
-  });
+  if (data.length != 0) {
+    res.json({
+      data,
+    });
+  } else {
+    next({
+      status: 404,
+      message: `No reservations found for date ${date}`
+    })
+  }
 }
 
 module.exports = {
-  list: [validateDate, asyncErrorBoundary(list)],
+  list: asyncErrorBoundary(list),
 };
