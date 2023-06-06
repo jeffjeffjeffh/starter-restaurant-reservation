@@ -1,5 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { Redirect, Route, Switch, useLocation } from "react-router-dom";
+import React, { useState } from "react";
+import {
+  Redirect,
+  Route,
+  Switch,
+  useLocation,
+  useHistory,
+} from "react-router-dom";
 import Dashboard from "../dashboard/Dashboard";
 import NotFound from "./NotFound";
 import { today, previous, next } from "../utils/date-time";
@@ -12,32 +18,25 @@ import { today, previous, next } from "../utils/date-time";
  * @returns {JSX.Element}
  */
 function Routes() {
-  const [date, setDate] = useState(today());
-  console.log(date);
-
+  // The date is governed by the state of the date query param
   const search = useLocation().search;
-
-  useEffect(initializeDate, []);
-
-  // Establish date
-  function initializeDate() {
-    let dateFromPath = new URLSearchParams(search).get("date");
-    if (dateFromPath) {
-      setDate(dateFromPath);
-    }
+  let dateFromPath = new URLSearchParams(search).get("date");
+  if (!dateFromPath) {
+    dateFromPath = today();
   }
 
-  // Buttons handlers to change date
-  function previousDate() {
-    setDate(previous(date));
-  }
+  const [date, setDate] = useState(dateFromPath);
 
-  function nextDate() {
-    setDate(next(date));
-  }
+  // Buttons handlers to navigate to different dates,
+  // passed into Dashboard component
+  const history = useHistory();
+
+  function previousDate() {}
+
+  function nextDate() {}
 
   function todayDate() {
-    setDate(today());
+    history.push(`/dashboard?date=${today()}`);
   }
 
   // Return
