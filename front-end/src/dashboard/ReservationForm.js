@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { createReservation } from "../utils/api";
 import ErrorAlert from "../utils/ErrorAlert";
+import validateNewReservation from "./validateNewReservation";
 
 import "./ReservationForm.css";
 
@@ -30,10 +31,10 @@ export default function ReservationForm() {
     event.preventDefault();
     setSubmissionError(null);
     try {
+      validateNewReservation(formData);
       await createReservation(formData);
       history.push(`/dashboard?date=${formData.reservation_date}`);
     } catch (error) {
-      console.log(error);
       setSubmissionError(error);
     }
   };
@@ -53,6 +54,7 @@ export default function ReservationForm() {
             type="text"
             name="first_name"
             id="first_name"
+            required
             placeholder="First name"
             value={formData.first_name}
             onChange={handleChange}
@@ -64,6 +66,7 @@ export default function ReservationForm() {
             type="text"
             name="last_name"
             id="last_name"
+            required
             placeholder="Last name"
             value={formData.last_name}
             onChange={handleChange}
@@ -75,6 +78,7 @@ export default function ReservationForm() {
             type="text"
             name="mobile_number"
             id="mobile_number"
+            required
             placeholder="(xxx) xxx-xxxx"
             value={formData.mobile_number}
             onChange={handleChange}
@@ -86,6 +90,7 @@ export default function ReservationForm() {
             type="date"
             name="reservation_date"
             id="reservation_date"
+            required
             value={formData.reservation_date}
             onChange={handleChange}
           ></input>
@@ -96,6 +101,7 @@ export default function ReservationForm() {
             type="time"
             name="reservation_time"
             id="reservation_time"
+            required
             value={formData.reservation_time}
             onChange={handleChange}
           ></input>
@@ -107,6 +113,7 @@ export default function ReservationForm() {
             name="people"
             id="people"
             placeholder="Number of guests"
+            required
             value={formData.people}
             onChange={handleChange}
           ></input>

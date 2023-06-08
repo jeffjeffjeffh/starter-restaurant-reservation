@@ -47,7 +47,7 @@ async function fetchJson(url, options, onCancel) {
     return payload.data;
   } catch (error) {
     if (error.name !== "AbortError") {
-      console.error(error.stack);
+      console.log("Fetch JSON error: ", error.message);
       throw error;
     }
     return Promise.resolve(onCancel);
@@ -71,13 +71,14 @@ export async function listReservations(params, signal) {
 }
 
 export async function createReservation(reservation) {
+  console.log("new reservation in API call", reservation);
   try {
-    const response = await axios.post(
-      `${API_BASE_URL}/reservations/`,
-      reservation
-    );
+    const response = await axios.post(`${API_BASE_URL}/reservations/`, {
+      data: reservation,
+    });
     return response;
   } catch (error) {
+    console.log("Create reservation error: ", error);
     throw error;
   }
 }
