@@ -82,3 +82,15 @@ export async function createReservation(reservation) {
     throw error;
   }
 }
+
+export async function createTable(table) {
+  try {
+    const response = axios.post(`${API_BASE_URL}/tables/`, {
+      data: table,
+    });
+    return response;
+  } catch (error) {
+    console.log("Create table error:", error);
+    throw error;
+  }
+}

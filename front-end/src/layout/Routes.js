@@ -9,6 +9,8 @@ import {
 
 import Dashboard from "../dashboard/Dashboard";
 import ReservationForm from "../dashboard/ReservationForm";
+import TableForm from "../dashboard/TableForm"
+
 import NotFound from "./NotFound";
 import { today, previous, next } from "../utils/date-time";
 
@@ -69,6 +71,9 @@ function Routes() {
       </Route>
       <Route path="/reservations/new">
         <ReservationForm />
+      </Route>
+      <Route path="/tables/new">
+        <TableForm />
       </Route>
       <Route>
         <NotFound />

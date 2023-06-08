@@ -5,10 +5,6 @@ function read(date) {
 }
 
 function create(reservation) {
-  console.log(
-    "New reservation passed into knex 'create' service: ",
-    reservation
-  );
   return knex("reservations")
     .insert(reservation)
     .returning("*")

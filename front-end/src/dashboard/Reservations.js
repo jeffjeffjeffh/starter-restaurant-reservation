@@ -2,9 +2,14 @@ import React from "react";
 import "./Reservations.css";
 
 export default function Reservations({ reservations }) {
+  const seatHandler = (event) => {
+    console.log(event.target.id);
+  }
+
   if (Array.isArray(reservations)) {
     return reservations.map(
       ({
+        reservation_id,
         first_name,
         last_name,
         mobile_number,
@@ -13,9 +18,9 @@ export default function Reservations({ reservations }) {
         people,
         created_at,
         updated_at,
-      }, index) => {
+      }) => {
         return (
-          <div className="reservationCard" key={index}>
+          <div className="reservationCard" key={reservation_id}>
             <h1>
               Guest: {last_name}, {first_name}
             </h1>
@@ -30,6 +35,7 @@ export default function Reservations({ reservations }) {
             <p>
               <span className="smaller">Last updated: {updated_at}</span>
             </p>
+            <a id={reservation_id} href={`reservations/${reservation_id}/seat`}>Seat</a>
           </div>
         );
       }
