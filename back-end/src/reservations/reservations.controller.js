@@ -95,10 +95,10 @@ async function list(req, res, next) {
 async function create(req, res) {
   const { reservation } = res.locals;
 
-  const response = await service.create(reservation);
+  const data = await service.create(reservation);
 
   res.status(201).json({
-    data: response,
+    data,
   });
 }
 

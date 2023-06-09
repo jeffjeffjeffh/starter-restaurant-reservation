@@ -9,7 +9,7 @@ import {
 
 import Dashboard from "../dashboard/Dashboard";
 import ReservationForm from "../dashboard/ReservationForm";
-import TableForm from "../dashboard/TableForm"
+import TableForm from "../dashboard/TableForm";
 
 import NotFound from "./NotFound";
 import { today, previous, next } from "../utils/date-time";

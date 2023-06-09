@@ -2,10 +2,6 @@ import React from "react";
 import "./Reservations.css";
 
 export default function Reservations({ reservations }) {
-  const seatHandler = (event) => {
-    console.log(event.target.id);
-  }
-
   if (Array.isArray(reservations)) {
     return reservations.map(
       ({
