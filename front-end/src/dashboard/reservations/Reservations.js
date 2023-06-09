@@ -1,4 +1,5 @@
 import React from "react";
+
 import "./Reservations.css";
 
 export default function Reservations({ reservations }) {
@@ -31,7 +32,9 @@ export default function Reservations({ reservations }) {
             <p>
               <span className="smaller">Last updated: {updated_at}</span>
             </p>
-            <a id={reservation_id} href={`reservations/${reservation_id}/seat`}>Seat</a>
+            <a id={reservation_id} href={`reservations/${reservation_id}/seat`}>
+              Seat
+            </a>
           </div>
         );
       }

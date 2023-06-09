@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import { listReservations, listTables } from "../utils/api";
 import ErrorAlert from "../utils/ErrorAlert";
 
-import Reservations from "./Reservations";
-import Tables from "./Tables";
+import Reservations from "./reservations/Reservations";
+import Tables from "./tables/Tables";
 
 /**
  * Defines the dashboard page.
@@ -53,6 +53,7 @@ function Dashboard({
   return (
     <main>
       <h1>Dashboard</h1>
+      <hr></hr>
       <button onClick={todayHandler}>Today</button>
       <button onClick={previousDateHandler}>Previous</button>
       <button onClick={nextDateHandler}>Next</button>
@@ -64,6 +65,7 @@ function Dashboard({
       ) : (
         <Reservations reservations={reservations} />
       )}
+      <hr></hr>
       {tablesError ? (
         <ErrorAlert error={tablesError} />
       ) : (
