@@ -37,7 +37,7 @@ function validateTime(time) {
 
 function validateDate(date) {
   // A reservation should not be able to be created on a past date.
-  const error = new Error("Reservation cannot be created on a past date.");
+  const error = new Error("Reservation must be created for a future time.");
 
   const resYear = parseInt(date.slice(0, 4));
   const resMonth = parseInt(date.slice(5, 7));

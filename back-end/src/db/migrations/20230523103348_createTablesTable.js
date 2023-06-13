@@ -1,6 +1,7 @@
 exports.up = function (knex) {
   return knex.schema.createTable("tables", (table) => {
-    table.string("table_id").primary();
+    table.increments("table_id").primary();
+    table.text("table_name");
     table.integer("capacity");
     table.integer("reservation_id").unsigned();
     table

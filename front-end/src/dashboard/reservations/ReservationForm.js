@@ -21,6 +21,8 @@ export default function ReservationForm() {
   const [formData, setFormData] = useState(initialFormState);
   const [submissionError, setSubmissionError] = useState(null);
 
+  console.log(formData.reservation_time);
+
   // Handlers
   const handleChange = ({ target }) => {
     setFormData({ ...formData, [target.id]: target.value });

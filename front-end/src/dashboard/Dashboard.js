@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-import { listReservations, listTables } from "../utils/api";
 import ErrorAlert from "../utils/ErrorAlert";
 
 import Reservations from "./reservations/Reservations";
@@ -17,37 +16,14 @@ function Dashboard({
   previousDateHandler,
   nextDateHandler,
   todayHandler,
+  reservations,
+  reservationsError,
+  tables,
+  tablesError,
 }) {
   // State
-  const [reservations, setReservations] = useState([]);
-  const [reservationsError, setReservationsError] = useState(null);
-
-  const [tables, setTables] = useState([]);
-  const [tablesError, setTablesError] = useState(null);
 
   // Effects
-  useEffect(loadDashboard, [date]);
-  function loadDashboard() {
-    const abortController = new AbortController();
-    setReservationsError(null);
-    listReservations({ date }, abortController.signal)
-      .then(setReservations)
-      .catch(setReservationsError);
-    return () => abortController.abort();
-  }
-
-  useEffect(() => {
-    async function loadTables() {
-      setTablesError(null);
-      try {
-        const tablesFromApi = await listTables();
-        setTables(tablesFromApi);
-      } catch (error) {
-        setTablesError(error);
-      }
-    }
-    loadTables();
-  }, []);
 
   // JSX
   return (
@@ -63,7 +39,7 @@ function Dashboard({
       {reservationsError ? (
         <ErrorAlert error={reservationsError} />
       ) : (
-        <Reservations reservations={reservations} />
+        <Reservations reservations={reservations} tables={tables} />
       )}
       <hr></hr>
       {tablesError ? (

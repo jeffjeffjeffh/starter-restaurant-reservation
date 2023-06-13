@@ -1,0 +1,12 @@
+.seatFormContainer {
+    border: 4px solid darkblue;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 60%;
+    margin: 0 auto;
+}
+
+.seatFormContainer {
+
+}

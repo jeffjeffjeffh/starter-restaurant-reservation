@@ -1,7 +1,15 @@
 const knex = require("../db/connection");
 
+function readReservation(reservation_id) {
+  return knex("reservations").select("people").where({ reservation_id });
+}
+
+function readTable(table_id) {
+  return knex("tables").select("capacity").where({ table_id });
+}
+
 function list() {
-  return knex("tables").select("*");
+  return knex("tables").select("*").orderBy("table_name");
 }
 
 function create(table) {
@@ -11,4 +19,11 @@ function create(table) {
     .then((createdRecords) => createdRecords[0]);
 }
 
-module.exports = { list, create };
+function update(reservation_id, table_id) {
+  return knex("tables")
+    .update({ reservation_id })
+    .where({ table_id })
+    .returning("*");
+}
+
+module.exports = { readReservation, readTable, list, create, update };

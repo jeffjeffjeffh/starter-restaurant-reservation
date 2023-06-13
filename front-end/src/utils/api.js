@@ -104,3 +104,19 @@ export async function listTables() {
     throw error;
   }
 }
+
+export async function seatReservation(form) {
+  const { table_id, reservation_id } = form;
+  console.log("seat reservation request going to api:", form);
+
+  try {
+    const response = await axios.put(
+      `${API_BASE_URL}/tables/${table_id}/seat`,
+      { data: { reservation_id } }
+    );
+    return response;
+  } catch (error) {
+    console.log("Seat reservation error: ", error);
+    throw error;
+  }
+}

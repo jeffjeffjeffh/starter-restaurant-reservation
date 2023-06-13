@@ -6,10 +6,12 @@ import {
   useLocation,
   useHistory,
 } from "react-router-dom";
+import { listReservations, listTables } from "../utils/api";
 
 import Dashboard from "../dashboard/Dashboard";
 import ReservationForm from "../dashboard/reservations/ReservationForm";
 import TableForm from "../dashboard/tables/TableForm";
+import Seat from "../dashboard/reservations/Seat";
 
 import NotFound from "./NotFound";
 import { today, previous, next } from "../utils/date-time";
@@ -31,10 +33,38 @@ function Routes() {
   }
 
   const [date, setDate] = useState(dateFromPath);
-
   useEffect(() => {
     setDate(dateFromPath);
   }, [dateFromPath]);
+
+  const [reservations, setReservations] = useState([]);
+  const [reservationsError, setReservationsError] = useState(null);
+
+  useEffect(loadDashboard, [date]);
+  function loadDashboard() {
+    const abortController = new AbortController();
+    setReservationsError(null);
+    listReservations({ date }, abortController.signal)
+      .then(setReservations)
+      .catch(setReservationsError);
+    return () => abortController.abort();
+  }
+
+  const [tables, setTables] = useState([]);
+  const [tablesError, setTablesError] = useState(null);
+
+  useEffect(() => {
+    async function loadTables() {
+      setTablesError(null);
+      try {
+        const tablesFromApi = await listTables();
+        setTables(tablesFromApi);
+      } catch (error) {
+        setTablesError(error);
+      }
+    }
+    loadTables();
+  }, []);
 
   // Buttons handlers to navigate to different dates,
   // passed into the Dashboard component
@@ -67,10 +97,21 @@ function Routes() {
           previousDateHandler={goPreviousDate}
           nextDateHandler={goNextDate}
           todayHandler={goTodayDate}
+          reservations={reservations}
+          reservationsError={reservationsError}
+          tables={tables}
+          tablesError={tablesError}
         />
       </Route>
       <Route path="/reservations/new">
         <ReservationForm />
+      </Route>
+      <Route path="/reservations/:reservation_id/seat">
+        <Seat
+          reservations={reservations}
+          tables={tables}
+          reservationsError={reservationsError}
+        />
       </Route>
       <Route path="/tables/new">
         <TableForm />

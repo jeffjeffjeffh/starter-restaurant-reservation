@@ -7,9 +7,9 @@ import "./TableForm.css";
 
 const { createTable } = require("../../utils/api");
 
-export default function TableForm(props) {
+export default function TableForm() {
   const emptyForm = {
-    table_id: "",
+    table_name: "",
     capacity: "",
   };
 
@@ -56,9 +56,9 @@ export default function TableForm(props) {
           <input
             type="text"
             name="table_name"
-            id="table_id"
+            id="table_name"
             placeholder="Table name"
-            value={FormData.table_name}
+            value={formData.table_name}
             onChange={handleChange}
           ></input>
         </label>
