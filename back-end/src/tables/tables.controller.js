@@ -77,17 +77,12 @@ function validateSeatRequest(req, res, next) {
     });
   }
 
-  console.log("people: ", people, "capacity: ", capacity);
-
   if (people > capacity) {
-    console.log(true);
     return next({
       status: 400,
       message: "Reservation has too many guests for this table's capacity",
     });
   }
-
-  console.log(false);
 
   return next();
 }
@@ -115,9 +110,7 @@ async function validateReservation(req, res, next) {
   try {
     const response = await service.readReservation(reservation_id);
     if (response) {
-      console.log("response", response);
       res.locals.people = response.people;
-      console.log("res.locals.people: ", res.locals.people);
       return next();
     } else {
       return next({
@@ -156,6 +149,36 @@ async function validateTable(req, res, next) {
   }
 }
 
+// Runs first when clearing a table
+async function tableIsOccupied(req, res, next) {
+  console.log("tableIsOccupied");
+  const { table_id } = req.params;
+
+  try {
+    const response = await service.readTable(table_id);
+    if (response) {
+      if (response.reservation_id) {
+        return next();
+      } else {
+        return next({
+          status: 400,
+          message: `Table ${table_id} is not occupied`,
+        });
+      }
+    } else {
+      return next({
+        status: 404,
+        message: `Table ${table_id} was not found`,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    next({ status: 400, message: error.message });
+  }
+
+  return next();
+}
+
 /****************  Operations ***************/
 async function list(req, res) {
   console.log("tables -> list");
@@ -178,6 +201,22 @@ async function update(req, res) {
   res.json({ data });
 }
 
+async function destroy(req, res) {
+  console.log("tables -> destroy");
+  const { table_id } = req.params;
+
+  try {
+    await service.destroy(table_id);
+    res.sendStatus(200);
+  } catch (error) {
+    console.log(error);
+    return next({
+      status: 400,
+      message: error.message,
+    });
+  }
+}
+
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [validateNewTable, asyncErrorBoundary(create)],
@@ -187,4 +226,5 @@ module.exports = {
     validateSeatRequest,
     asyncErrorBoundary(update),
   ],
+  delete: [asyncErrorBoundary(tableIsOccupied), asyncErrorBoundary(destroy)],
 };

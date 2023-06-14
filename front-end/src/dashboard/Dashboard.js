@@ -20,6 +20,7 @@ function Dashboard({
   reservationsError,
   tables,
   tablesError,
+  setTablesChange,
 }) {
   // State
 
@@ -45,7 +46,7 @@ function Dashboard({
       {tablesError ? (
         <ErrorAlert error={tablesError} />
       ) : (
-        <Tables tables={tables} />
+        <Tables tables={tables} setTablesChange={setTablesChange} />
       )}
     </main>
   );

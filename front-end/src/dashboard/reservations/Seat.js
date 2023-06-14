@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
-
 import { seatReservation } from "../../utils/api";
 import ErrorAlert from "../../utils/ErrorAlert";
-
 import "./Seat.css";
 
 export default function Seat({
@@ -15,17 +13,17 @@ export default function Seat({
   setTablesChange,
 }) {
   const reservationPathId = parseInt(useParams().reservation_id);
-
   const initialFormData = { table_id: "", reservation_id: reservationPathId };
 
+  // Hooks
   const [formData, setFormData] = useState(initialFormData);
-
   const history = useHistory();
 
-  function handleSubmit(event) {
+  // Handlers
+  async function handleSubmit(event) {
     event.preventDefault();
     try {
-      seatReservation(formData);
+      await seatReservation(formData);
       setReservationsChange(Date.now());
       setTablesChange(Date.now());
       history.push("/");
@@ -42,17 +40,24 @@ export default function Seat({
     history.push("/dashboard");
   }
 
+  // Grabs the reservation to be seated from the array of reservations
   const reservation = reservations.find((reservation) => {
     return reservation.reservation_id === reservationPathId;
   });
 
+  // JSX
+
+  /* The top part displays either the reservation being seated or
+   an error alert. The other part displays a dropdown for selecting
+   which table to seat the reservation at or an error if a problem exists
+   getting the tables. 
+  */
   return (
     <>
       <h1>Seating reservation:</h1>
       {!reservation ? (
         <div>
           <ErrorAlert error={reservationsError} />
-          <button onClick={handleCancel}>Cancel</button>
         </div>
       ) : (
         <div className="seatFormContainer">
@@ -84,6 +89,7 @@ export default function Seat({
             })}
           </select>
           <button type="submit">Submit</button>
+          <button onClick={handleCancel}>Cancel</button>
         </form>
       ) : (
         <ErrorAlert error={tablesError} />

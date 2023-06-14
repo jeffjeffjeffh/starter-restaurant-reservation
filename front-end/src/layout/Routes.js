@@ -103,25 +103,23 @@ function Routes() {
           reservationsError={reservationsError}
           tables={tables}
           tablesError={tablesError}
+          setTablesChange={setTablesChange}
         />
       </Route>
       <Route path="/reservations/new">
-        <ReservationForm
-          setReservationsChange={setReservationsChange}
-        />
+        <ReservationForm setReservationsChange={setReservationsChange} />
       </Route>
       <Route path="/reservations/:reservation_id/seat">
         <Seat
           reservations={reservations}
           reservationsError={reservationsError}
+          setReservationsChange={setReservationsChange}
           tables={tables}
           setTablesChange={setTablesChange}
         />
       </Route>
       <Route path="/tables/new">
-        <TableForm
-          setTablesChange={setTablesChange}
-        />
+        <TableForm setTablesChange={setTablesChange} />
       </Route>
       <Route>
         <NotFound />

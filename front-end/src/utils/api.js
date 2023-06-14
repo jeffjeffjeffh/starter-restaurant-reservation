@@ -114,10 +114,20 @@ export async function seatReservation(form) {
   const path = `${API_BASE_URL}/tables/${table_id}/seat`;
 
   try {
-    const response = await axios.put(path, { data: { reservation_id } });
-    return response;
+    await axios.put(path, { data: { reservation_id } });
   } catch (error) {
     console.log("Seat reservation error: ", error);
+    throw error;
+  }
+}
+
+export async function clearTable(table_id) {
+  const path = `${API_BASE_URL}/tables/${table_id}/seat`;
+
+  try {
+    await axios.delete(path);
+  } catch (error) {
+    console.log("Error clearing table: ", error);
     throw error;
   }
 }
