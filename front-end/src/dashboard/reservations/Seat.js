@@ -6,18 +6,32 @@ import ErrorAlert from "../../utils/ErrorAlert";
 
 import "./Seat.css";
 
-export default function Seat({ reservations, tables, reservationsError }) {
+export default function Seat({
+  reservations,
+  reservationsError,
+  setReservationsChange,
+  tables,
+  tablesError,
+  setTablesChange,
+}) {
   const reservationPathId = parseInt(useParams().reservation_id);
 
   const initialFormData = { table_id: "", reservation_id: reservationPathId };
 
   const [formData, setFormData] = useState(initialFormData);
-  
+
   const history = useHistory();
 
   function handleSubmit(event) {
     event.preventDefault();
-    seatReservation(formData);
+    try {
+      seatReservation(formData);
+      setReservationsChange(Date.now());
+      setTablesChange(Date.now());
+      history.push("/");
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   function handleChange({ target }) {
@@ -50,8 +64,10 @@ export default function Seat({ reservations, tables, reservationsError }) {
           <p>Party of {reservation.people}</p>
         </div>
       )}
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="table_id">
+
+      {!tablesError ? (
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="table_id"></label>
           <select
             name="table_id"
             id="table_id"
@@ -67,9 +83,11 @@ export default function Seat({ reservations, tables, reservationsError }) {
               );
             })}
           </select>
-        </label>
-        <button type="submit">Submit</button>
-      </form>
+          <button type="submit">Submit</button>
+        </form>
+      ) : (
+        <ErrorAlert error={tablesError} />
+      )}
     </>
   );
 }

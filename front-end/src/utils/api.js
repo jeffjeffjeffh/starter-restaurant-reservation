@@ -71,7 +71,8 @@ export async function listReservations(params, signal) {
 }
 
 export async function createReservation(reservation) {
-  console.log("new reservation in API call", reservation);
+  // First coerce "people" to a number for backend validation to pass
+  reservation.people = Number(reservation.people);
   try {
     const response = await axios.post(`${API_BASE_URL}/reservations/`, {
       data: reservation,
@@ -84,6 +85,9 @@ export async function createReservation(reservation) {
 }
 
 export async function createTable(table) {
+  // First coerce "capacity" to a number for backend validation to pass
+  table.capacity = Number(table.capacity);
+
   try {
     const response = axios.post(`${API_BASE_URL}/tables/`, {
       data: table,
@@ -107,13 +111,10 @@ export async function listTables() {
 
 export async function seatReservation(form) {
   const { table_id, reservation_id } = form;
-  console.log("seat reservation request going to api:", form);
+  const path = `${API_BASE_URL}/tables/${table_id}/seat`;
 
   try {
-    const response = await axios.put(
-      `${API_BASE_URL}/tables/${table_id}/seat`,
-      { data: { reservation_id } }
-    );
+    const response = await axios.put(path, { data: { reservation_id } });
     return response;
   } catch (error) {
     console.log("Seat reservation error: ", error);

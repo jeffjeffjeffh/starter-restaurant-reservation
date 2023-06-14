@@ -1,10 +1,12 @@
 const service = require("./tables.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
-// Validation
+/****************  Validation ***************/
+
+// Runs first when creating a new table
 function validateNewTable(req, res, next) {
   if (!req.body.data) {
-    next({
+    return next({
       status: 400,
       message: "Request body data is missing",
     });
@@ -12,43 +14,43 @@ function validateNewTable(req, res, next) {
 
   const { table_name, capacity } = req.body.data;
 
-  if (table_name === null || table_name === undefined) {
-    next({
+  if (!table_name) {
+    return next({
       status: 400,
       message: "table_name is missing",
     });
   }
 
   if (table_name.length === 0) {
-    next({
+    return next({
       status: 400,
       message: "table_name is empty",
     });
   }
 
   if (table_name.length < 2) {
-    next({
+    return next({
       status: 400,
       message: "table_name must be at least two characters",
     });
   }
 
-  if (capacity === null || capacity === undefined) {
-    next({
+  if (!capacity) {
+    return next({
       status: 400,
       message: "Table capacity is missing",
     });
   }
 
   if (capacity < 1) {
-    next({
+    return next({
       status: 400,
       message: "Table capacity must be at least one",
     });
   }
 
   if (typeof capacity !== "number") {
-    next({
+    return next({
       status: 400,
       message: "Received NaN for table capacity",
     });
@@ -62,33 +64,47 @@ function validateNewTable(req, res, next) {
   return next();
 }
 
+// Runs when updating a table with a new reservation,
+// after validating the reservation and table
 function validateSeatRequest(req, res, next) {
   console.log("validateSeatRequest");
-  const { people, capacity } = res.locals;
+  const { people, capacity, reservation_id } = res.locals;
 
-  if (people > capacity) {
-    next({
-      error: 400,
-      message: "Reservation has too many guests for this table",
+  if (reservation_id !== null) {
+    return next({
+      status: 400,
+      message: "Table is already occupied",
     });
   }
+
+  console.log("people: ", people, "capacity: ", capacity);
+
+  if (people > capacity) {
+    console.log(true);
+    return next({
+      status: 400,
+      message: "Reservation has too many guests for this table's capacity",
+    });
+  }
+
+  console.log(false);
 
   return next();
 }
 
-// Operations
+// Runs first when updating a table with a reservation
 async function validateReservation(req, res, next) {
   console.log("validateReservation");
 
-  if (req.body.data === null || req.body.data === undefined) {
-    next({
+  if (!req.body.data) {
+    return next({
       status: 400,
       message: "Request body data is missing",
     });
   }
 
   if (!req.body.data.reservation_id) {
-    next({
+    return next({
       status: 400,
       message: "reservation_id is missing",
     });
@@ -98,30 +114,49 @@ async function validateReservation(req, res, next) {
 
   try {
     const response = await service.readReservation(reservation_id);
-    res.locals.people = response;
-    return next();
+    if (response) {
+      console.log("response", response);
+      res.locals.people = response.people;
+      console.log("res.locals.people: ", res.locals.people);
+      return next();
+    } else {
+      return next({
+        status: 404,
+        message: `reservation_id ${reservation_id} does not exist`,
+      });
+    }
   } catch (error) {
-    console.log("reservation_id does not exist", error);
+    console.log(error);
     next({ status: 404, message: error.message });
   }
 
   return next();
 }
 
+// Runs second when updating a table with a reservation
 async function validateTable(req, res, next) {
   console.log("validateTable");
   const { table_id } = req.params;
 
   try {
     const response = await service.readTable(table_id);
-    res.locals.table = response;
-    return next();
+    if (response) {
+      res.locals.capacity = response.capacity;
+      res.locals.reservation_id = response.reservation_id;
+      return next();
+    } else {
+      return next({
+        status: 404,
+        message: `table_id ${table_id} does not exist`,
+      });
+    }
   } catch (error) {
-    console.log("table does not exist", error);
-    next({ status: 404, message: error.message });
+    console.log("error retrieving table", error);
+    return next({ status: 404, message: error.message });
   }
 }
 
+/****************  Operations ***************/
 async function list(req, res) {
   console.log("tables -> list");
   const data = await service.list();
@@ -140,7 +175,7 @@ async function update(req, res) {
   const { table_id } = req.params;
 
   const data = await service.update(reservation_id, table_id);
-  res.sendStatus(200).json({ data });
+  res.json({ data });
 }
 
 module.exports = {

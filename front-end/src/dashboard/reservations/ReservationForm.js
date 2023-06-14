@@ -7,7 +7,9 @@ import ErrorAlert from "../../utils/ErrorAlert";
 import validateNewReservation from "./validateNewReservation";
 import "./ReservationForm.css";
 
-export default function ReservationForm() {
+export default function ReservationForm({
+  setReservationsChange,
+}) {
   // Form stuff
   const initialFormState = {
     first_name: "",
@@ -20,8 +22,6 @@ export default function ReservationForm() {
 
   const [formData, setFormData] = useState(initialFormState);
   const [submissionError, setSubmissionError] = useState(null);
-
-  console.log(formData.reservation_time);
 
   // Handlers
   const handleChange = ({ target }) => {
@@ -36,6 +36,7 @@ export default function ReservationForm() {
     try {
       validateNewReservation(formData);
       await createReservation(formData);
+      setReservationsChange(Date.now());
       history.push(`/dashboard?date=${formData.reservation_date}`);
     } catch (error) {
       setSubmissionError(error);
@@ -51,77 +52,73 @@ export default function ReservationForm() {
   return (
     <div className="reservationFormContainer">
       <form onSubmit={handleSubmit}>
-        <label htmlFor="first_name">
-          First name:
-          <input
-            type="text"
-            name="first_name"
-            id="first_name"
-            required
-            placeholder="First name"
-            value={formData.first_name}
-            onChange={handleChange}
-          ></input>
-        </label>
-        <label htmlFor="last_name">
-          Last name:
-          <input
-            type="text"
-            name="last_name"
-            id="last_name"
-            required
-            placeholder="Last name"
-            value={formData.last_name}
-            onChange={handleChange}
-          ></input>
-        </label>
-        <label htmlFor="mobile_number">
-          Mobile phone number:
-          <input
-            type="text"
-            name="mobile_number"
-            id="mobile_number"
-            required
-            placeholder="(xxx) xxx-xxxx"
-            value={formData.mobile_number}
-            onChange={handleChange}
-          ></input>
-        </label>
-        <label htmlFor="reservation_date">
-          Date of reservation:
-          <input
-            type="date"
-            name="reservation_date"
-            id="reservation_date"
-            required
-            value={formData.reservation_date}
-            onChange={handleChange}
-          ></input>
-        </label>
-        <label htmlFor="reservation_time">
-          Time of reservation:
-          <input
-            type="time"
-            name="reservation_time"
-            id="reservation_time"
-            required
-            value={formData.reservation_time}
-            onChange={handleChange}
-          ></input>
-        </label>
-        <label htmlFor="people">
-          Number of guests:
-          <input
-            type="text"
-            name="people"
-            id="people"
-            placeholder="Number of guests"
-            required
-            value={formData.people}
-            onChange={handleChange}
-          ></input>
-        </label>
+        <label htmlFor="first_name">First name:</label>
+        <input
+          type="text"
+          name="first_name"
+          id="first_name"
+          required
+          placeholder="First name"
+          value={formData.first_name}
+          onChange={handleChange}
+        ></input>
+
+        <label htmlFor="last_name">Last name:</label>
+        <input
+          type="text"
+          name="last_name"
+          id="last_name"
+          required
+          placeholder="Last name"
+          value={formData.last_name}
+          onChange={handleChange}
+        ></input>
+
+        <label htmlFor="mobile_number">Mobile phone number:</label>
+        <input
+          type="text"
+          name="mobile_number"
+          id="mobile_number"
+          required
+          placeholder="(xxx) xxx-xxxx"
+          value={formData.mobile_number}
+          onChange={handleChange}
+        ></input>
+
+        <label htmlFor="reservation_date">Date of reservation:</label>
+        <input
+          type="date"
+          name="reservation_date"
+          id="reservation_date"
+          required
+          value={formData.reservation_date}
+          onChange={handleChange}
+        ></input>
+
+        <label htmlFor="reservation_time">Time of reservation:</label>
+        <input
+          type="time"
+          name="reservation_time"
+          id="reservation_time"
+          required
+          value={formData.reservation_time}
+          onChange={handleChange}
+        ></input>
+
+        <label htmlFor="people">Number of guests:</label>
+        <input
+          type="number"
+          name="people"
+          id="people"
+          placeholder="Number of guests"
+          required
+          min="1"
+          value={formData.people}
+          onChange={handleChange}
+        ></input>
+
         <button type="submit">Submit</button>
+
         <button onClick={handleCancel}>Cancel</button>
       </form>
       {submissionError ? <ErrorAlert error={submissionError} /> : null}

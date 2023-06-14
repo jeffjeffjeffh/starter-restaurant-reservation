@@ -39,8 +39,9 @@ function Routes() {
 
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
+  const [reservationsChange, setReservationsChange] = useState(false);
 
-  useEffect(loadDashboard, [date]);
+  useEffect(loadDashboard, [date, reservationsChange]);
   function loadDashboard() {
     const abortController = new AbortController();
     setReservationsError(null);
@@ -52,6 +53,7 @@ function Routes() {
 
   const [tables, setTables] = useState([]);
   const [tablesError, setTablesError] = useState(null);
+  const [tablesChange, setTablesChange] = useState(false);
 
   useEffect(() => {
     async function loadTables() {
@@ -64,7 +66,7 @@ function Routes() {
       }
     }
     loadTables();
-  }, []);
+  }, [tablesChange]);
 
   // Buttons handlers to navigate to different dates,
   // passed into the Dashboard component
@@ -104,17 +106,22 @@ function Routes() {
         />
       </Route>
       <Route path="/reservations/new">
-        <ReservationForm />
+        <ReservationForm
+          setReservationsChange={setReservationsChange}
+        />
       </Route>
       <Route path="/reservations/:reservation_id/seat">
         <Seat
           reservations={reservations}
-          tables={tables}
           reservationsError={reservationsError}
+          tables={tables}
+          setTablesChange={setTablesChange}
         />
       </Route>
       <Route path="/tables/new">
-        <TableForm />
+        <TableForm
+          setTablesChange={setTablesChange}
+        />
       </Route>
       <Route>
         <NotFound />

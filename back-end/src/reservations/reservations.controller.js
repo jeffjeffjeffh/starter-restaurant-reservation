@@ -37,7 +37,7 @@ function isTime(time) {
 // Validation
 function hasValidReservationData(req, res, next) {
   if (!req.body.data) {
-    next({
+    return next({
       status: 400,
       message: "Request data missing",
     });
@@ -53,105 +53,105 @@ function hasValidReservationData(req, res, next) {
   } = req.body.data;
 
   if (!first_name) {
-    next({
+    return next({
       status: 400,
       message: "first_name field is missing",
     });
   }
 
   if (first_name.length < 1) {
-    next({
+    return next({
       status: 400,
       message: `first_name field is empty`,
     });
   }
 
   if (!last_name) {
-    next({
+    return next({
       status: 400,
       message: "last_name field is missing",
     });
   }
 
   if (last_name.length < 1) {
-    next({
+    return next({
       status: 400,
       message: "last_name field is empty",
     });
   }
 
   if (!mobile_number) {
-    next({
+    return next({
       status: 400,
       message: "mobile_number field is missing",
     });
   }
 
   if (mobile_number.length < 1) {
-    next({
+    return next({
       status: 400,
       message: `mobile_number field is empty`,
     });
   }
 
   if (reservation_date === null || reservation_date === undefined) {
-    next({
+    return next({
       status: 400,
       message: "reservation_date field is missing",
     });
   }
 
   if (!isDate(reservation_date)) {
-    next({
+    return next({
       status: 400,
       message: "reservation_date field is not of type date",
     });
   }
 
   if (reservation_date.length < 1) {
-    next({
+    return next({
       status: 400,
       message: "reservation_date field is empty",
     });
   }
 
   if (reservation_time === null || reservation_time === undefined) {
-    next({
+    return next({
       status: 400,
       message: "reservation_time field is missing",
     });
   }
 
   if (reservation_time.length < 0) {
-    next({
+    return next({
       status: 400,
       message: "reservation_time field is empty",
     });
   }
 
   if (!isTime(reservation_time)) {
-    next({
+    return next({
       status: 400,
       message: "reservation_time field is not of type time",
     });
   }
 
   if (people === null || people === undefined) {
-    next({
+    return next({
       status: 400,
       message: "people field is missing",
     });
   }
 
   if (typeof people !== "number") {
-    next({
+    return next({
       status: 400,
       message: "Received NaN for people field",
     });
   }
 
   if (people <= 0) {
-    next({
+    return next({
       status: 400,
       message: `Number of people cannot be less than 1`,
     });
@@ -163,7 +163,7 @@ function hasValidReservationData(req, res, next) {
     dayIsNotTuesday(reservation_date);
   } catch (error) {
     console.log(error);
-    next({
+    return next({
       status: 400,
       message: error.message,
     });
@@ -183,17 +183,25 @@ function hasValidReservationData(req, res, next) {
   return next();
 }
 
+/* This method is run when reading a reservation with a specific ID */
 async function reservationExists(req, res, next) {
-  const reservation_Id = Number(req.params.reservation_Id);
+  const reservation_id = Number(req.params.reservation_id);
 
   try {
-    const data = await service.read(reservation_Id);
-    res.locals.reservation = data;
-    return next();
+    const data = await service.read(reservation_id);
+    if (data) {
+      res.locals.reservation = data;
+      return next();
+    } else {
+      return next({
+        status: 404,
+        message: `Reservation ${reservation_id} not found`,
+      });
+    }
   } catch (error) {
-    next({
+    return next({
       status: 404,
-      message: "Reservation does not exist",
+      message: "There was a problem retrieving the reservation",
     });
   }
 }
@@ -224,7 +232,7 @@ async function list(req, res, next) {
       data,
     });
   } else {
-    next({
+    return next({
       status: 404,
       message: `No reservations found for ${date}`,
     });
