@@ -227,7 +227,9 @@ async function list(req, res, next) {
   const { date } = req.query;
   const data = await service.list(date);
 
-  if (data) {
+  console.log(data);
+
+  if (Array.isArray(data) && data.length > 0) {
     res.json({
       data,
     });

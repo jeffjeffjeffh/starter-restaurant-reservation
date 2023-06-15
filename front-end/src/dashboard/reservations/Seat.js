@@ -17,11 +17,14 @@ export default function Seat({
 
   // Hooks
   const [formData, setFormData] = useState(initialFormData);
+  const [seatingError, setSeatingError] = useState(null);
   const history = useHistory();
 
   // Handlers
   async function handleSubmit(event) {
     event.preventDefault();
+    setSeatingError(null);
+
     try {
       await seatReservation(formData);
       setReservationsChange(Date.now());
@@ -29,6 +32,7 @@ export default function Seat({
       history.push("/");
     } catch (error) {
       console.log(error);
+      setSeatingError(error);
     }
   }
 
@@ -71,26 +75,29 @@ export default function Seat({
       )}
 
       {!tablesError ? (
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="table_id"></label>
-          <select
-            name="table_id"
-            id="table_id"
-            value={formData.table_id}
-            onChange={handleChange}
-          >
-            <option value="">Select a table</option>
-            {tables.map((table) => {
-              return (
-                <option key={table.table_id} value={table.table_id}>
-                  {table.table_name} - {table.capacity}
-                </option>
-              );
-            })}
-          </select>
-          <button type="submit">Submit</button>
-          <button onClick={handleCancel}>Cancel</button>
-        </form>
+        <div>
+          <form onSubmit={handleSubmit}>
+            <label htmlFor="table_id"></label>
+            <select
+              name="table_id"
+              id="table_id"
+              value={formData.table_id}
+              onChange={handleChange}
+            >
+              <option value="">Select a table</option>
+              {tables.map((table) => {
+                return (
+                  <option key={table.table_id} value={table.table_id}>
+                    {table.table_name} - {table.capacity}
+                  </option>
+                );
+              })}
+            </select>
+            <button type="submit">Submit</button>
+            <button onClick={handleCancel}>Cancel</button>
+          </form>
+          {seatingError ? <ErrorAlert error={seatingError} /> : null}
+        </div>
       ) : (
         <ErrorAlert error={tablesError} />
       )}

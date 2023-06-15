@@ -19,14 +19,30 @@ function create(table) {
     .then((createdRecords) => createdRecords[0]);
 }
 
+/*
+   Seats a reservation using a transaction,
+   which performs both queries using the same connection
+*/
 function update(reservation_id, table_id) {
-  return knex("tables")
-    .update({ reservation_id })
-    .where({ table_id })
-    .returning("*")
-    .then((updatedRecords) => updatedRecords[0]);
+  return knex
+    .transaction(function (trx) {
+      return trx("tables")
+        .update({ reservation_id })
+        .where({ table_id })
+        .then(() => {
+          return trx("reservations")
+            .update("status", "seated")
+            .where({ reservation_id })
+            .returning(["reservation_id", "status"])
+            .then((updatedRecords) => updatedRecords[0]);
+        });
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
 }
 
+// Doesn't actually delete a record, just frees a table when a reservation finishes
 function destroy(table_id) {
   return knex("tables").update("reservation_id", null).where({ table_id });
 }
