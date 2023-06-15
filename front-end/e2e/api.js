@@ -69,6 +69,7 @@ async function createReservation(reservation, signal) {
  */
 async function createTable(table, signal) {
   const url = `${API_BASE_URL}/tables`;
+  console.log(table);
   const options = {
     method: "POST",
     headers,

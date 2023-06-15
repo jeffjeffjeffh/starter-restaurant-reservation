@@ -12,7 +12,7 @@ function validateNewTable(req, res, next) {
     });
   }
 
-  const { table_name, capacity } = req.body.data;
+  const { table_name, capacity, reservation_id = null } = req.body.data;
 
   if (!table_name) {
     return next({
@@ -59,6 +59,7 @@ function validateNewTable(req, res, next) {
   res.locals.newTable = {
     table_name,
     capacity,
+    reservation_id
   };
 
   return next();

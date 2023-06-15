@@ -10,7 +10,7 @@ export default function Tables({ tables, setTablesChange }) {
   // Handlers
   async function handleFinish({ target }) {
     const confirm = window.confirm(
-      "Is the table ready to seat new guests? This cannot be undone."
+      "Is this table ready to seat new guests? This cannot be undone."
     );
 
     if (confirm) {
@@ -33,20 +33,20 @@ export default function Tables({ tables, setTablesChange }) {
     <div className="tablesContainer">
       <h1>Tables</h1>
       <ol>
-        {tables.map((table) => {
+        {tables.map(({ table_id, table_name, capacity, reservation_id }) => {
           return (
-            <li key={table.table_id}>
-              <h4>{table.table_name}</h4>
-              <p>Capacity: {table.capacity}</p>
-              {table.reservation_id ? (
-                <p data-table-id-status={`${table.table_id}`}>Occupied</p>
+            <li key={table_id}>
+              <h4>{table_name}</h4>
+              <p>Capacity: {capacity}</p>
+              {reservation_id ? (
+                <p data-table-id-status={`${table_id}`}>Occupied</p>
               ) : (
-                <p data-table-id-status={`${table.table_id}`}>Free</p>
+                <p data-table-id-status={`${table_id}`}>Free</p>
               )}
               <button
                 onClick={handleFinish}
-                data-table-id-finish={table.table_id}
-                id={table.table_id}
+                data-table-id-finish={table_id}
+                id={table_id}
               >
                 Finish
               </button>

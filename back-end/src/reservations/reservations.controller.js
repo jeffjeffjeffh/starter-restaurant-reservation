@@ -227,7 +227,7 @@ async function list(req, res, next) {
   const { date } = req.query;
   const data = await service.list(date);
 
-  if (data.length != 0) {
+  if (data) {
     res.json({
       data,
     });
@@ -242,5 +242,5 @@ async function list(req, res, next) {
 module.exports = {
   create: [hasValidReservationData, asyncErrorBoundary(create)],
   read: [asyncErrorBoundary(reservationExists), read],
-  list: asyncErrorBoundary(list),
+  list: [asyncErrorBoundary(list)],
 };

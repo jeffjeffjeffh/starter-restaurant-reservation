@@ -9,9 +9,9 @@ export default function Reservations({ reservations }) {
         reservation_id,
         first_name,
         last_name,
-        mobile_number,
         reservation_date,
         reservation_time,
+        mobile_number,
         people,
         created_at,
         updated_at,
@@ -32,8 +32,11 @@ export default function Reservations({ reservations }) {
             <p>
               <span className="smaller">Last updated: {updated_at}</span>
             </p>
-            <a id={reservation_id} href={`reservations/${reservation_id}/seat`}>
-              Seat
+            <a
+              id={reservation_id}
+              href={`/reservations/${reservation_id}/seat`}
+            >
+              seat
             </a>
           </div>
         );
