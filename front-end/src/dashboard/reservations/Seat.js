@@ -41,6 +41,7 @@ export default function Seat({
   }
 
   function handleCancel(event) {
+    event.preventDefault();
     history.push("/dashboard");
   }
 

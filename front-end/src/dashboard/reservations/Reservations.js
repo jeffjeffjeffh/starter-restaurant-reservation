@@ -27,7 +27,9 @@ export default function Reservations({ reservations }) {
               <h3>Time: {reservation_time}</h3>
               <p>Contact: {mobile_number}</p>
               <p>Number of Guests: {people}</p>
-              <b>Status: {status}</b>
+              <b data-reservation-id-status={reservation_id}>
+                Status: {status}
+              </b>
               <hr></hr>
               <p>
                 <span className="smaller">Created: {created_at}</span>
