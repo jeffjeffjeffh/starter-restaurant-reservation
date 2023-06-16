@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { clearTable } from "../../utils/api";
 import "./Tables.css";
 
-export default function Tables({ tables, setTablesChange }) {
+export default function Tables({ tables, setTablesChange, setReservationsChange }) {
   // Hooks
   const history = useHistory();
 
@@ -17,6 +17,7 @@ export default function Tables({ tables, setTablesChange }) {
       try {
         await clearTable(Number(target.id));
         setTablesChange(Date.now());
+        setReservationsChange(Date.now());
         history.push("/");
       } catch (error) {
         console.log(error);

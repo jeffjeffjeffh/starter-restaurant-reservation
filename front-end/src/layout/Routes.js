@@ -101,6 +101,7 @@ function Routes() {
           todayHandler={goTodayDate}
           reservations={reservations}
           reservationsError={reservationsError}
+          setReservationsChange={setReservationsChange}
           tables={tables}
           tablesError={tablesError}
           setTablesChange={setTablesChange}

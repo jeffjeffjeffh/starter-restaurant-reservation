@@ -18,6 +18,7 @@ function Dashboard({
   todayHandler,
   reservations,
   reservationsError,
+  setReservationsChange,
   tables,
   tablesError,
   setTablesChange,
@@ -46,7 +47,7 @@ function Dashboard({
       {tablesError ? (
         <ErrorAlert error={tablesError} />
       ) : (
-        <Tables tables={tables} setTablesChange={setTablesChange} />
+        <Tables tables={tables} setTablesChange={setTablesChange} setReservationsChange={setReservationsChange} />
       )}
     </main>
   );

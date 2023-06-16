@@ -35,7 +35,9 @@ function isTime(time) {
 }
 
 // Validation
-function hasValidReservationData(req, res, next) {
+
+/* This runs first when creating a new reservation */
+function postHasValidReservationData(req, res, next) {
   if (!req.body.data) {
     return next({
       status: 400,
@@ -50,6 +52,7 @@ function hasValidReservationData(req, res, next) {
     reservation_date,
     reservation_time,
     people,
+    status,
   } = req.body.data;
 
   if (!first_name) {
@@ -157,6 +160,15 @@ function hasValidReservationData(req, res, next) {
     });
   }
 
+  if (status) {
+    if (status === "seated" || status === "finished") {
+      return next({
+        status: 400,
+        message: "Created reservation cannot be seated or finished",
+      });
+    }
+  }
+
   try {
     validateTime(reservation_time);
     validateDate(reservation_date);
@@ -183,7 +195,23 @@ function hasValidReservationData(req, res, next) {
   return next();
 }
 
-/* This method is run when reading a reservation with a specific ID */
+/* This runs first when updating a reservation */
+function putHasStatus(req, res, next) {
+  const { status = null } = req.body.data;
+  // console.log("status: ", status);
+
+  if (!status) {
+    return next({
+      status: 400,
+      message: "status field is missing",
+    });
+  } else {
+    res.locals.status = status;
+    return next();
+  }
+}
+
+/* This runs when getting or updating a reservation with a specific ID */
 async function reservationExists(req, res, next) {
   const reservation_id = Number(req.params.reservation_id);
 
@@ -203,6 +231,34 @@ async function reservationExists(req, res, next) {
       status: 404,
       message: "There was a problem retrieving the reservation",
     });
+  }
+}
+
+/* This runs third when updating a reservation */
+function reservationStatusIsKnown(req, res, next) {
+  const { status } = res.locals;
+
+  if (status === "unknown") {
+    return next({
+      status: 400,
+      message: "Reservation status is unknown",
+    });
+  }
+
+  return next();
+}
+
+/* This runs fourth when updating a reservation */
+function reservationIsNotFinished(req, res, next) {
+  const { status } = res.locals.reservation;
+
+  if (status === "finished") {
+    return next({
+      status: 400,
+      message: "a finished reservation cannot be updated",
+    });
+  } else {
+    return next();
   }
 }
 
@@ -227,9 +283,7 @@ async function list(req, res, next) {
   const { date } = req.query;
   const data = await service.list(date);
 
-  console.log(data);
-
-  if (Array.isArray(data) && data.length > 0) {
+  if (data) {
     res.json({
       data,
     });
@@ -241,8 +295,26 @@ async function list(req, res, next) {
   }
 }
 
+async function update(req, res) {
+  console.log("reservations -> update");
+
+  const { status } = res.locals;
+  const { reservation_id } = req.params;
+
+  const data = await service.update(reservation_id, status);
+  // console.log(data);
+  res.status(200).json({ data });
+}
+
 module.exports = {
-  create: [hasValidReservationData, asyncErrorBoundary(create)],
+  create: [postHasValidReservationData, asyncErrorBoundary(create)],
   read: [asyncErrorBoundary(reservationExists), read],
   list: [asyncErrorBoundary(list)],
+  update: [
+    putHasStatus,
+    asyncErrorBoundary(reservationExists),
+    reservationStatusIsKnown,
+    reservationIsNotFinished,
+    asyncErrorBoundary(update),
+  ],
 };
