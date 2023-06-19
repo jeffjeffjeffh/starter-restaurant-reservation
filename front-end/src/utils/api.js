@@ -131,3 +131,16 @@ export async function clearTable(table_id) {
     throw error;
   }
 }
+
+export async function searchReservationsByMobileNumber(mobile_number) {
+  const path = `${API_BASE_URL}/reservations?mobile_number=${mobile_number}`;
+
+  console.log(path);
+
+  try {
+    const response = await axios.get(path);
+    return response.data.data;
+  } catch (error) {
+    throw error;
+  }
+}

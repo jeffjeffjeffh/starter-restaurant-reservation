@@ -12,6 +12,7 @@ import Dashboard from "../dashboard/Dashboard";
 import ReservationForm from "../dashboard/reservations/ReservationForm";
 import TableForm from "../dashboard/tables/TableForm";
 import Seat from "../dashboard/reservations/Seat";
+import Search from "./../dashboard/reservations/Search";
 
 import NotFound from "./NotFound";
 import { today, previous, next } from "../utils/date-time";
@@ -121,6 +122,9 @@ function Routes() {
       </Route>
       <Route path="/tables/new">
         <TableForm setTablesChange={setTablesChange} />
+      </Route>
+      <Route exact path="/search">
+        <Search />
       </Route>
       <Route>
         <NotFound />

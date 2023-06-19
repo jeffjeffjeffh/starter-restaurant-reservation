@@ -280,8 +280,16 @@ function read(req, res) {
 }
 
 async function list(req, res, next) {
-  const { date } = req.query;
-  const data = await service.list(date);
+  const { date, mobile_number } = req.query;
+  console.log("mobile number:", mobile_number);
+
+  let data = [];
+
+  if (date) {
+    data = await service.listWithDate(date);
+  } else if (mobile_number) {
+    data = await service.listWithMobileNumber(mobile_number);
+  }
 
   if (data) {
     res.json({
