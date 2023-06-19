@@ -13,6 +13,7 @@ import ReservationForm from "../dashboard/reservations/ReservationForm";
 import TableForm from "../dashboard/tables/TableForm";
 import Seat from "../dashboard/reservations/Seat";
 import Search from "./../dashboard/reservations/Search";
+import EditReservation from "../dashboard/reservations/EditReservation";
 
 import NotFound from "./NotFound";
 import { today, previous, next } from "../utils/date-time";
@@ -42,8 +43,8 @@ function Routes() {
   const [reservationsError, setReservationsError] = useState(null);
   const [reservationsChange, setReservationsChange] = useState(false);
 
-  useEffect(loadDashboard, [date, reservationsChange]);
-  function loadDashboard() {
+  useEffect(loadReservations, [date, reservationsChange]);
+  function loadReservations() {
     const abortController = new AbortController();
     setReservationsError(null);
     listReservations({ date }, abortController.signal)
@@ -119,6 +120,9 @@ function Routes() {
           tables={tables}
           setTablesChange={setTablesChange}
         />
+      </Route>
+      <Route path="/reservations/:reservation_id/edit">
+        <EditReservation setReservationsChange={setReservationsChange} />
       </Route>
       <Route path="/tables/new">
         <TableForm setTablesChange={setTablesChange} />

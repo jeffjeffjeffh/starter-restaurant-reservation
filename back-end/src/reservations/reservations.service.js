@@ -45,7 +45,7 @@ function listWithMobileNumber(mobile_number) {
     Kind of weird.
 */
 
-function update(reservation_id, status) {
+function updateStatus(reservation_id, status) {
   // console.log("knex update to status:", status);
   return knex("reservations")
     .update({ status })
@@ -54,10 +54,35 @@ function update(reservation_id, status) {
     .then((updatedRecords) => updatedRecords[0]);
 }
 
+function updateInfo(reservation_id, reservation) {
+  const {
+    first_name,
+    last_name,
+    mobile_number,
+    reservation_date,
+    reservation_time,
+    people,
+  } = reservation;
+
+  return knex("reservations")
+    .update({
+      first_name,
+      last_name,
+      mobile_number,
+      reservation_date,
+      reservation_time,
+      people,
+    })
+    .where({ reservation_id })
+    .returning("*")
+    .then((updatedRecords) => updatedRecords[0]);
+}
+
 module.exports = {
   create,
   read,
   listWithDate,
   listWithMobileNumber,
-  update,
+  updateStatus,
+  updateInfo,
 };

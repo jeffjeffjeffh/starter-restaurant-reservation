@@ -99,6 +99,23 @@ export async function createTable(table) {
   }
 }
 
+export async function updateReservation(reservation, reservation_id) {
+  // First coerce "people" to a number for backend validation to pass
+  reservation.people = Number(reservation.people);
+  try {
+    const response = await axios.put(
+      `${API_BASE_URL}/reservations/${reservation_id}`,
+      {
+        data: reservation,
+      }
+    );
+    return response;
+  } catch (error) {
+    console.log("Create reservation error: ", error);
+    throw error;
+  }
+}
+
 export async function listTables() {
   try {
     const response = await axios.get(`${API_BASE_URL}/tables`);

@@ -190,7 +190,7 @@ function postHasValidReservationData(req, res, next) {
     people,
   };
 
-  res.locals.reservation = newReservation;
+  res.locals.newReservation = newReservation;
 
   return next();
 }
@@ -264,9 +264,9 @@ function reservationIsNotFinished(req, res, next) {
 
 // Operations
 async function create(req, res) {
-  const { reservation } = res.locals;
+  const { newReservation } = res.locals;
 
-  const data = await service.create(reservation);
+  const data = await service.create(newReservation);
 
   res.status(201).json({
     data,
@@ -280,8 +280,9 @@ function read(req, res) {
 }
 
 async function list(req, res, next) {
+  console.log("reservations -> list");
+
   const { date, mobile_number } = req.query;
-  console.log("mobile number:", mobile_number);
 
   let data = [];
 
@@ -303,14 +304,27 @@ async function list(req, res, next) {
   }
 }
 
-async function update(req, res) {
-  console.log("reservations -> update");
+async function updateStatus(req, res) {
+  console.log("reservations -> updateStatus");
 
   const { status } = res.locals;
   const { reservation_id } = req.params;
 
-  const data = await service.update(reservation_id, status);
+  const data = await service.updateStatus(reservation_id, status);
   // console.log(data);
+  res.status(200).json({ data });
+}
+
+async function updateInfo(req, res) {
+  console.log("reservations -> updateInfo");
+
+  const { newReservation } = res.locals;
+  const { reservation_id } = req.params;
+
+  console.log(newReservation);
+
+  const data = await service.updateInfo(reservation_id, newReservation);
+
   res.status(200).json({ data });
 }
 
@@ -318,11 +332,16 @@ module.exports = {
   create: [postHasValidReservationData, asyncErrorBoundary(create)],
   read: [asyncErrorBoundary(reservationExists), read],
   list: [asyncErrorBoundary(list)],
-  update: [
+  updateStatus: [
     putHasStatus,
     asyncErrorBoundary(reservationExists),
     reservationStatusIsKnown,
     reservationIsNotFinished,
-    asyncErrorBoundary(update),
+    asyncErrorBoundary(updateStatus),
+  ],
+  updateInfo: [
+    asyncErrorBoundary(reservationExists),
+    postHasValidReservationData,
+    asyncErrorBoundary(updateInfo),
   ],
 };

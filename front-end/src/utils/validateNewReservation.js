@@ -1,4 +1,4 @@
-import { today } from "../../utils/date-time";
+import { today } from "./date-time";
 
 function validatePeople(people) {
   if (people < 1) {

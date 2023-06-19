@@ -23,10 +23,6 @@ function Dashboard({
   tablesError,
   setTablesChange,
 }) {
-  // State
-
-  // Effects
-
   // JSX
   return (
     <main>
@@ -47,7 +43,11 @@ function Dashboard({
       {tablesError ? (
         <ErrorAlert error={tablesError} />
       ) : (
-        <Tables tables={tables} setTablesChange={setTablesChange} setReservationsChange={setReservationsChange} />
+        <Tables
+          tables={tables}
+          setTablesChange={setTablesChange}
+          setReservationsChange={setReservationsChange}
+        />
       )}
     </main>
   );

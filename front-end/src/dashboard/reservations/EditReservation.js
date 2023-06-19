@@ -1,14 +1,12 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
-
-import { createReservation } from "../../utils/api";
-import ErrorAlert from "../../utils/ErrorAlert";
+import { useHistory, useParams } from "react-router-dom";
 
 import validateNewReservation from "../../utils/validateNewReservation";
-import "./ReservationForm.css";
+import { updateReservation } from "../../utils/api";
+import ErrorAlert from "../../utils/ErrorAlert";
 
-export default function ReservationForm({ setReservationsChange }) {
-  // Form stuff
+export default function EditReservation({ setReservationsChange }) {
+  // Hooks
   const initialFormState = {
     first_name: "",
     last_name: "",
@@ -21,19 +19,21 @@ export default function ReservationForm({ setReservationsChange }) {
   const [formData, setFormData] = useState(initialFormState);
   const [submissionError, setSubmissionError] = useState(null);
 
+  const history = useHistory();
+
+  const { reservation_id } = useParams();
+
   // Handlers
   const handleChange = ({ target }) => {
     setFormData({ ...formData, [target.id]: target.value });
   };
-
-  const history = useHistory();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setSubmissionError(null);
     try {
       validateNewReservation(formData);
-      await createReservation(formData);
+      await updateReservation(formData, reservation_id);
       setReservationsChange(Date.now());
       history.push(`/dashboard?date=${formData.reservation_date}`);
     } catch (error) {

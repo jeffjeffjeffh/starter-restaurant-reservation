@@ -10,13 +10,13 @@ export default function SearchForm({ setFilteredReservations }) {
   const [formData, setFormData] = useState(initialFormData);
 
   // Handlers
-  const handleSubmit = async (event) => {
+  async function handleSubmit(event) {
     event.preventDefault();
     const response = await searchReservationsByMobileNumber(
       formData.mobile_number
     );
     setFilteredReservations(response);
-  };
+  }
 
   const handleChange = ({ target }) => {
     setFormData({ ...formData, [target.name]: target.value });
@@ -34,6 +34,7 @@ export default function SearchForm({ setFilteredReservations }) {
         value={FormData.mobile_number}
         onChange={handleChange}
         placeholder="Enter a customer's phone number"
+        required
       ></input>
       <button type="submit">Find</button>
     </form>
