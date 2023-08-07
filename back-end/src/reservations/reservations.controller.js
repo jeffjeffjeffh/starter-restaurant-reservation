@@ -37,7 +37,7 @@ function isTime(time) {
 // Validation
 
 /* This runs first when creating a new reservation */
-function postHasValidReservationData(req, res, next) {
+function hasValidReservationData(req, res, next) {
   if (!req.body.data) {
     return next({
       status: 400,
@@ -171,8 +171,13 @@ function postHasValidReservationData(req, res, next) {
 
   try {
     validateTime(reservation_time);
-    validateDate(reservation_date);
     dayIsNotTuesday(reservation_date);
+
+    // Since the test for US-08 edits a reservation for a past date,
+    // we need to skip date validation for PUT requests.
+    if (req.method == "POST") {
+      validateDate(reservation_date);
+    }
   } catch (error) {
     console.log(error);
     return next({
@@ -274,8 +279,8 @@ async function create(req, res) {
 }
 
 function read(req, res) {
+  console.log("reservations -> read");
   const { reservation } = res.locals;
-
   res.json({ data: reservation });
 }
 
@@ -329,7 +334,7 @@ async function updateInfo(req, res) {
 }
 
 module.exports = {
-  create: [postHasValidReservationData, asyncErrorBoundary(create)],
+  create: [hasValidReservationData, asyncErrorBoundary(create)],
   read: [asyncErrorBoundary(reservationExists), read],
   list: [asyncErrorBoundary(list)],
   updateStatus: [
@@ -341,7 +346,7 @@ module.exports = {
   ],
   updateInfo: [
     asyncErrorBoundary(reservationExists),
-    postHasValidReservationData,
+    hasValidReservationData,
     asyncErrorBoundary(updateInfo),
   ],
 };

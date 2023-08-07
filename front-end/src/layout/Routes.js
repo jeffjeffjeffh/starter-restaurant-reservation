@@ -9,7 +9,7 @@ import {
 import { listReservations, listTables } from "../utils/api";
 
 import Dashboard from "../dashboard/Dashboard";
-import ReservationForm from "../dashboard/reservations/ReservationForm";
+import CreateReservation from "../dashboard/reservations/CreateReservation";
 import TableForm from "../dashboard/tables/TableForm";
 import Seat from "../dashboard/reservations/Seat";
 import Search from "./../dashboard/reservations/Search";
@@ -56,6 +56,7 @@ function Routes() {
   const [tables, setTables] = useState([]);
   const [tablesError, setTablesError] = useState(null);
   const [tablesChange, setTablesChange] = useState(false);
+  const [lastPath, setLastPath] = useState("");
 
   useEffect(() => {
     async function loadTables() {
@@ -73,6 +74,10 @@ function Routes() {
   // Buttons handlers to navigate to different dates,
   // passed into the Dashboard component
   const history = useHistory();
+
+  useEffect(() => {
+    setLastPath(history.location.pathname);
+  }, [history.location.pathname]);
 
   function goPreviousDate() {
     history.push(`/dashboard?date=${previous(date)}`);
@@ -103,32 +108,50 @@ function Routes() {
           todayHandler={goTodayDate}
           reservations={reservations}
           reservationsError={reservationsError}
+          reservationsChange={reservationsChange}
           setReservationsChange={setReservationsChange}
           tables={tables}
           tablesError={tablesError}
+          tablesChange={tablesChange}
           setTablesChange={setTablesChange}
         />
       </Route>
       <Route path="/reservations/new">
-        <ReservationForm setReservationsChange={setReservationsChange} />
+        <CreateReservation
+          reservationsChange={reservationsChange}
+          setReservationsChange={setReservationsChange}
+        />
       </Route>
       <Route path="/reservations/:reservation_id/seat">
         <Seat
           reservations={reservations}
           reservationsError={reservationsError}
+          reservationsChange={reservationsChange}
           setReservationsChange={setReservationsChange}
           tables={tables}
           setTablesChange={setTablesChange}
         />
       </Route>
       <Route path="/reservations/:reservation_id/edit">
-        <EditReservation setReservationsChange={setReservationsChange} />
+        <EditReservation
+          lastPath={lastPath}
+          reservationsChange={reservationsChange}
+          setReservationsChange={setReservationsChange}
+        />
       </Route>
       <Route path="/tables/new">
-        <TableForm setTablesChange={setTablesChange} />
+        <TableForm
+          tablesChange={tablesChange}
+          setTablesChange={setTablesChange}
+        />
       </Route>
       <Route exact path="/search">
-        <Search />
+        <Search
+          reservationsChange={reservationsChange}
+          setReservationsChange={setReservationsChange}
+          tablesChange={tablesChange}
+          setTablesChange={setTablesChange}
+        />
       </Route>
       <Route>
         <NotFound />

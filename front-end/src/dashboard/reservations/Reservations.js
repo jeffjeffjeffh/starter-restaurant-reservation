@@ -1,8 +1,33 @@
 import React from "react";
-
+import { cancelReservation } from "../../utils/api";
 import "./Reservations.css";
 
-export default function Reservations({ reservations }) {
+export default function Reservations({
+  reservations,
+  reservationsChange,
+  setReservationsChange,
+  tablesChange,
+  setTablesChange,
+}) {
+  const handleCancel = async (event) => {
+    event.preventDefault();
+
+    const confirm = window.confirm(
+      "Do you want to cancel this reservation? This cannot be undone."
+    );
+
+    if (confirm) {
+      const reservation_id = event.target.id;
+      try {
+        await cancelReservation(reservation_id);
+        setReservationsChange(!reservationsChange);
+        setTablesChange(!tablesChange);
+      } catch (error) {
+        throw error;
+      }
+    }
+  };
+
   if (Array.isArray(reservations)) {
     return reservations.map(
       ({
@@ -37,6 +62,7 @@ export default function Reservations({ reservations }) {
               <p>
                 <span className="smaller">Last updated: {updated_at}</span>
               </p>
+              <a href={`/reservations/${reservation_id}/edit`}>edit</a>
               {status === "seated" ? null : (
                 <a
                   id={reservation_id}
@@ -45,6 +71,13 @@ export default function Reservations({ reservations }) {
                   seat
                 </a>
               )}
+              <button
+                onClick={handleCancel}
+                data-reservation-id-cancel={reservation_id}
+                id={reservation_id}
+              >
+                Cancel
+              </button>
             </div>
           );
         } else {

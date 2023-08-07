@@ -99,12 +99,12 @@ export async function createTable(table) {
   }
 }
 
-export async function updateReservation(reservation, reservation_id) {
-  // First coerce "people" to a number for backend validation to pass
+export async function updateReservation(reservation) {
+  // Coerce "people" to a number for backend validation to pass
   reservation.people = Number(reservation.people);
   try {
     const response = await axios.put(
-      `${API_BASE_URL}/reservations/${reservation_id}`,
+      `${API_BASE_URL}/reservations/${reservation.reservation_id}`,
       {
         data: reservation,
       }
@@ -157,6 +157,27 @@ export async function searchReservationsByMobileNumber(mobile_number) {
   try {
     const response = await axios.get(path);
     return response.data.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getReservationById(reservation_id) {
+  const path = `${API_BASE_URL}/reservations/${reservation_id}`;
+
+  try {
+    const response = await axios.get(path);
+    return response.data.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function cancelReservation(reservation_id) {
+  const path = `${API_BASE_URL}/reservations/${reservation_id}/status`;
+
+  try {
+    await axios.put(path, { data: { status: "cancelled" } });
   } catch (error) {
     throw error;
   }

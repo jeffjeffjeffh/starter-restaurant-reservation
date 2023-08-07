@@ -7,9 +7,11 @@ import "./Seat.css";
 export default function Seat({
   reservations,
   reservationsError,
+  reservationsChange,
   setReservationsChange,
   tables,
   tablesError,
+  tablesChange,
   setTablesChange,
 }) {
   const reservationPathId = parseInt(useParams().reservation_id);
@@ -27,8 +29,8 @@ export default function Seat({
 
     try {
       await seatReservation(formData);
-      setReservationsChange(Date.now());
-      setTablesChange(Date.now());
+      setReservationsChange(!reservationsChange);
+      setTablesChange(!reservationsChange);
       history.push("/");
     } catch (error) {
       console.log(error);

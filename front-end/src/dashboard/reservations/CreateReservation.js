@@ -5,7 +5,7 @@ import { createReservation } from "../../utils/api";
 import ErrorAlert from "../../utils/ErrorAlert";
 
 import validateNewReservation from "../../utils/validateNewReservation";
-import "./ReservationForm.css";
+import "./CreateReservation.css";
 
 export default function ReservationForm({ setReservationsChange }) {
   // Form stuff
@@ -32,7 +32,8 @@ export default function ReservationForm({ setReservationsChange }) {
     event.preventDefault();
     setSubmissionError(null);
     try {
-      validateNewReservation(formData);
+      let isNew = true;
+      validateNewReservation(formData, isNew);
       await createReservation(formData);
       setReservationsChange(Date.now());
       history.push(`/dashboard?date=${formData.reservation_date}`);

@@ -18,9 +18,11 @@ function Dashboard({
   todayHandler,
   reservations,
   reservationsError,
+  reservationsChange,
   setReservationsChange,
   tables,
   tablesError,
+  tablesChange,
   setTablesChange,
 }) {
   // JSX
@@ -37,7 +39,13 @@ function Dashboard({
       {reservationsError ? (
         <ErrorAlert error={reservationsError} />
       ) : (
-        <Reservations reservations={reservations} tables={tables} />
+        <Reservations
+          reservations={reservations}
+          reservationsChange={reservationsChange}
+          setReservationsChange={setReservationsChange}
+          tablesChange={tablesChange}
+          setTablesChange={setTablesChange}
+        />
       )}
       <hr></hr>
       {tablesError ? (

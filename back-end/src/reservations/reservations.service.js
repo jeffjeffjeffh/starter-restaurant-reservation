@@ -15,7 +15,8 @@ function listWithDate(date) {
   return knex("reservations")
     .select("*")
     .where({ reservation_date: date })
-    .andWhereNot("status", "finished")
+    .andWhereNot({ status: "cancelled" })
+    .andWhereNot({ status: "finished" })
     .orderBy("reservation_time");
 }
 
@@ -27,6 +28,8 @@ function listWithMobileNumber(mobile_number) {
       "translate(mobile_number, '() -', '') like ?",
       `%${mobile_number.replace(/\D/g, "")}%`
     )
+    .andWhereNot({ status: "finished" })
+    .andWhereNot({ status: "cancelled" })
     .orderBy("reservation_date");
 }
 

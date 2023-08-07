@@ -1,7 +1,9 @@
 const knex = require("../db/connection");
 
 function readReservation(reservation_id) {
-  return knex("reservations").first(["people", "status"]).where({ reservation_id });
+  return knex("reservations")
+    .first(["people", "status"])
+    .where({ reservation_id });
 }
 
 function readTable(table_id) {
