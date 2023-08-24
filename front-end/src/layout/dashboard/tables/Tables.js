@@ -42,8 +42,8 @@ export default function Tables({
     <div className="tablesContainer">
       <h1>Tables</h1>
       <ol>
-        {tables.map((table, index) => (
-          <li key={index}>
+        {tables.map((table) => (
+          <li key={`table-${table.table_name}`}>
             <Table table={table} handleFinish={handleFinish} />
           </li>
         ))}

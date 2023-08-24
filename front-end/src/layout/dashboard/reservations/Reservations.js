@@ -33,8 +33,13 @@ export default function Reservations({
   if (Array.isArray(reservations)) {
     return (
       <ul>
-        {reservations.map((reservation, index) => (
-          <li key={index} className="reservationCard">
+        {reservations.map((reservation) => (
+          <li
+            key={`reservation-${
+              reservation.first_name + reservation.last_name
+            }`}
+            className="reservationCard"
+          >
             <Reservation
               reservation={reservation}
               handleCancel={handleCancel}
