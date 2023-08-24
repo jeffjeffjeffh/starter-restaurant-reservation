@@ -73,8 +73,10 @@ export async function listReservations(params, signal) {
 export async function createReservation(reservation) {
   // First coerce "people" to a number for backend validation to pass
   reservation.people = Number(reservation.people);
+  const controller = new AbortController();
   try {
     const response = await axios.post(`${API_BASE_URL}/reservations/`, {
+      signal: controller.signal,
       data: reservation,
     });
     return response;
@@ -87,9 +89,11 @@ export async function createReservation(reservation) {
 export async function createTable(table) {
   // First coerce "capacity" to a number for backend validation to pass
   table.capacity = Number(table.capacity);
+  const controller = new AbortController();
 
   try {
     const response = axios.post(`${API_BASE_URL}/tables/`, {
+      signal: controller.signal,
       data: table,
     });
     return response;
@@ -102,10 +106,13 @@ export async function createTable(table) {
 export async function updateReservation(reservation) {
   // Coerce "people" to a number for backend validation to pass
   reservation.people = Number(reservation.people);
+  const controller = new AbortController();
+
   try {
     const response = await axios.put(
       `${API_BASE_URL}/reservations/${reservation.reservation_id}`,
       {
+        signal: controller.signal,
         data: reservation,
       }
     );
@@ -117,8 +124,12 @@ export async function updateReservation(reservation) {
 }
 
 export async function listTables() {
+  const controller = new AbortController();
+
   try {
-    const response = await axios.get(`${API_BASE_URL}/tables`);
+    const response = await axios.get(`${API_BASE_URL}/tables`, {
+      signal: controller.signal,
+    });
     return response.data.data;
   } catch (error) {
     console.log("List tables error:", error);
@@ -129,9 +140,13 @@ export async function listTables() {
 export async function seatReservation(form) {
   const { table_id, reservation_id } = form;
   const path = `${API_BASE_URL}/tables/${table_id}/seat`;
+  const controller = new AbortController();
 
   try {
-    await axios.put(path, { data: { reservation_id } });
+    await axios.put(path, {
+      data: { reservation_id },
+      signal: controller.signal,
+    });
   } catch (error) {
     console.log("Seat reservation error: ", error);
     throw error;
@@ -140,9 +155,10 @@ export async function seatReservation(form) {
 
 export async function clearTable(table_id) {
   const path = `${API_BASE_URL}/tables/${table_id}/seat`;
+  const controller = new AbortController();
 
   try {
-    await axios.delete(path);
+    await axios.delete(path, { signal: controller.signal });
   } catch (error) {
     console.log("Error clearing table: ", error);
     throw error;
@@ -151,11 +167,10 @@ export async function clearTable(table_id) {
 
 export async function searchReservationsByMobileNumber(mobile_number) {
   const path = `${API_BASE_URL}/reservations?mobile_number=${mobile_number}`;
-
-  // console.log(path);
+  const controller = new AbortController();
 
   try {
-    const response = await axios.get(path);
+    const response = await axios.get(path, { signal: controller.signal });
     return response.data.data;
   } catch (error) {
     throw error;
@@ -164,9 +179,10 @@ export async function searchReservationsByMobileNumber(mobile_number) {
 
 export async function getReservationById(reservation_id) {
   const path = `${API_BASE_URL}/reservations/${reservation_id}`;
+  const controller = new AbortController();
 
   try {
-    const response = await axios.get(path);
+    const response = await axios.get(path, { signal: controller.signal });
     return response.data.data;
   } catch (error) {
     throw error;
@@ -175,9 +191,13 @@ export async function getReservationById(reservation_id) {
 
 export async function cancelReservation(reservation_id) {
   const path = `${API_BASE_URL}/reservations/${reservation_id}/status`;
+  const controller = new AbortController();
 
   try {
-    await axios.put(path, { data: { status: "cancelled" } });
+    await axios.put(path, {
+      data: { status: "cancelled" },
+      signal: controller.signal,
+    });
   } catch (error) {
     throw error;
   }
