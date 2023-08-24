@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import EditReservationForm from "./EditReservationForm";
-import { formatAsDate, formatAsTime } from "../../utils/date-time";
-import { getReservationById } from "../../utils/api";
-import ErrorAlert from "../../utils/ErrorAlert";
 
-export default function EditReservation({ lastPath, reservationsChange, setReservationsChange }) {
+import { formatAsDate, formatAsTime } from "../../../utils/date-time";
+import { getReservationById } from "../../../utils/api";
+
+import EditReservationForm from "./EditReservationForm";
+import ErrorAlert from "../../../utils/ErrorAlert";
+
+export default function EditReservation({ lastPath, setReservationsChange }) {
   const { reservation_id } = useParams();
 
   const [reservation, setReservation] = useState();
@@ -39,7 +41,6 @@ export default function EditReservation({ lastPath, reservationsChange, setReser
           <EditReservationForm
             lastPath={lastPath}
             reservation={reservation}
-            resevationsChange={reservationsChange}
             setReservationsChange={setReservationsChange}
             setSubmissionError={setSubmissionError}
           />

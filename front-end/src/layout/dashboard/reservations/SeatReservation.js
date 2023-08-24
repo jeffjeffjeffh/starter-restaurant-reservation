@@ -1,17 +1,18 @@
 import React, { useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { seatReservation } from "../../utils/api";
-import ErrorAlert from "../../utils/ErrorAlert";
-import "./Seat.css";
+
+import { seatReservation } from "../../../utils/api";
+
+import ErrorAlert from "../../../utils/ErrorAlert";
+
+import "./SeatReservation.css";
 
 export default function Seat({
   reservations,
   reservationsError,
-  reservationsChange,
   setReservationsChange,
   tables,
   tablesError,
-  tablesChange,
   setTablesChange,
 }) {
   const reservationPathId = parseInt(useParams().reservation_id);
@@ -29,8 +30,8 @@ export default function Seat({
 
     try {
       await seatReservation(formData);
-      setReservationsChange(!reservationsChange);
-      setTablesChange(!reservationsChange);
+      setReservationsChange(new Date());
+      setTablesChange(new Date());
       history.push("/");
     } catch (error) {
       console.log(error);

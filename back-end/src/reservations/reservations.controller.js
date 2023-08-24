@@ -279,13 +279,13 @@ async function create(req, res) {
 }
 
 function read(req, res) {
-  console.log("reservations -> read");
+  // console.log("reservations -> read");
   const { reservation } = res.locals;
   res.json({ data: reservation });
 }
 
 async function list(req, res, next) {
-  console.log("reservations -> list");
+  // console.log("reservations -> list");
 
   const { date, mobile_number } = req.query;
 
@@ -310,7 +310,7 @@ async function list(req, res, next) {
 }
 
 async function updateStatus(req, res) {
-  console.log("reservations -> updateStatus");
+  // console.log("reservations -> updateStatus");
 
   const { status } = res.locals;
   const { reservation_id } = req.params;
@@ -321,12 +321,12 @@ async function updateStatus(req, res) {
 }
 
 async function updateInfo(req, res) {
-  console.log("reservations -> updateInfo");
+  // console.log("reservations -> updateInfo");
 
   const { newReservation } = res.locals;
   const { reservation_id } = req.params;
 
-  console.log(newReservation);
+  // console.log(newReservation);
 
   const data = await service.updateInfo(reservation_id, newReservation);
 

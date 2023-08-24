@@ -6,17 +6,17 @@ import {
   useLocation,
   useHistory,
 } from "react-router-dom";
+
 import { listReservations, listTables } from "../utils/api";
-
-import Dashboard from "../dashboard/Dashboard";
-import CreateReservation from "../dashboard/reservations/CreateReservation";
-import TableForm from "../dashboard/tables/TableForm";
-import Seat from "../dashboard/reservations/Seat";
-import Search from "./../dashboard/reservations/Search";
-import EditReservation from "../dashboard/reservations/EditReservation";
-
-import NotFound from "./NotFound";
 import { today, previous, next } from "../utils/date-time";
+
+import Dashboard from "./dashboard/Dashboard";
+import CreateReservation from "./dashboard/reservations/CreateReservation";
+import TableForm from "./dashboard/tables/TableForm";
+import Seat from "./dashboard/reservations/SeatReservation";
+import Search from "./dashboard/search/Search";
+import EditReservation from "./dashboard/reservations/EditReservation";
+import NotFound from "./NotFound";
 
 /**
  * Defines all the routes for the application.
@@ -40,22 +40,23 @@ function Routes() {
   }, [dateFromPath]);
 
   const [reservations, setReservations] = useState([]);
+  const [reservationsChange, setReservationsChange] = useState(new Date());
   const [reservationsError, setReservationsError] = useState(null);
-  const [reservationsChange, setReservationsChange] = useState(false);
 
-  useEffect(loadReservations, [date, reservationsChange]);
-  function loadReservations() {
+  const loadReservations = () => {
     const abortController = new AbortController();
     setReservationsError(null);
     listReservations({ date }, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError);
     return () => abortController.abort();
-  }
+  };
+
+  useEffect(loadReservations, [date, reservationsChange]);
 
   const [tables, setTables] = useState([]);
+  const [tablesChange, setTablesChange] = useState(new Date());
   const [tablesError, setTablesError] = useState(null);
-  const [tablesChange, setTablesChange] = useState(false);
   const [lastPath, setLastPath] = useState("");
 
   useEffect(() => {
@@ -79,17 +80,17 @@ function Routes() {
     setLastPath(history.location.pathname);
   }, [history.location.pathname]);
 
-  function goPreviousDate() {
+  const goYesterday = () => {
     history.push(`/dashboard?date=${previous(date)}`);
-  }
+  };
 
-  function goNextDate() {
+  const goTomorrow = () => {
     history.push(`/dashboard?date=${next(date)}`);
-  }
+  };
 
-  function goTodayDate() {
+  const goToday = () => {
     history.push(`/dashboard`);
-  }
+  };
 
   // Return
   return (
@@ -103,31 +104,25 @@ function Routes() {
       <Route path="/dashboard">
         <Dashboard
           date={date}
-          previousDateHandler={goPreviousDate}
-          nextDateHandler={goNextDate}
-          todayHandler={goTodayDate}
+          goYesterdayHandler={goYesterday}
+          goTomorrowHandler={goTomorrow}
+          goTodayHandler={goToday}
           reservations={reservations}
-          reservationsError={reservationsError}
-          reservationsChange={reservationsChange}
           setReservationsChange={setReservationsChange}
+          reservationsError={reservationsError}
           tables={tables}
-          tablesError={tablesError}
-          tablesChange={tablesChange}
           setTablesChange={setTablesChange}
+          tablesError={tablesError}
         />
       </Route>
       <Route path="/reservations/new">
-        <CreateReservation
-          reservationsChange={reservationsChange}
-          setReservationsChange={setReservationsChange}
-        />
+        <CreateReservation setReservationsChange={setReservationsChange} />
       </Route>
       <Route path="/reservations/:reservation_id/seat">
         <Seat
           reservations={reservations}
-          reservationsError={reservationsError}
-          reservationsChange={reservationsChange}
           setReservationsChange={setReservationsChange}
+          reservationsError={reservationsError}
           tables={tables}
           setTablesChange={setTablesChange}
         />
@@ -135,21 +130,15 @@ function Routes() {
       <Route path="/reservations/:reservation_id/edit">
         <EditReservation
           lastPath={lastPath}
-          reservationsChange={reservationsChange}
           setReservationsChange={setReservationsChange}
         />
       </Route>
       <Route path="/tables/new">
-        <TableForm
-          tablesChange={tablesChange}
-          setTablesChange={setTablesChange}
-        />
+        <TableForm setTablesChange={setTablesChange} />
       </Route>
       <Route exact path="/search">
         <Search
-          reservationsChange={reservationsChange}
           setReservationsChange={setReservationsChange}
-          tablesChange={tablesChange}
           setTablesChange={setTablesChange}
         />
       </Route>

@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { updateReservation } from "../../utils/api";
-import validateNewReservation from "../../utils/validateNewReservation";
-import { formatAsDate } from "../../utils/date-time";
+
+import { updateReservation } from "../../../utils/api";
+import validateNewReservation from "../../../utils/validateNewReservation";
+import { formatAsDate } from "../../../utils/date-time";
 
 export default function ReservationForm({
-  lastPath,
   reservation,
-  reservationsChange,
   setReservationsChange,
   setSubmissionError,
 }) {
@@ -20,7 +19,7 @@ export default function ReservationForm({
   };
 
   const date = formatAsDate(formData.reservation_date);
-  console.log(date);
+  // console.log(date);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -28,9 +27,9 @@ export default function ReservationForm({
     try {
       let isNew = false;
       validateNewReservation(formData, isNew);
-      console.log(formData);
+      // console.log(formData);
       await updateReservation(formData);
-      setReservationsChange(!reservationsChange);
+      setReservationsChange(new Date());
       history.push(`/dashboard/?date=${date}`);
     } catch (error) {
       setSubmissionError(error);

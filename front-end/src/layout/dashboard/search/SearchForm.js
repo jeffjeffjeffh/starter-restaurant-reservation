@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import { searchReservationsByMobileNumber } from "../../utils/api";
+
+import { searchReservationsByMobileNumber } from "../../../utils/api";
+
+import "./SearchForm.css";
 
 export default function SearchForm({ setFilteredReservations }) {
   const initialFormData = {
@@ -24,7 +27,7 @@ export default function SearchForm({ setFilteredReservations }) {
 
   // JSX
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="searchForm">
       <label htmlFor="mobile_number">
         Enter a mobile number to search for:
       </label>

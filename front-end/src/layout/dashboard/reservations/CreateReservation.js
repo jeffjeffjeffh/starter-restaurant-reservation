@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 
-import { createReservation } from "../../utils/api";
-import ErrorAlert from "../../utils/ErrorAlert";
+import { createReservation } from "../../../utils/api";
+import ErrorAlert from "../../../utils/ErrorAlert";
 
-import validateNewReservation from "../../utils/validateNewReservation";
+import validateNewReservation from "../../../utils/validateNewReservation";
 import "./CreateReservation.css";
 
 export default function ReservationForm({ setReservationsChange }) {

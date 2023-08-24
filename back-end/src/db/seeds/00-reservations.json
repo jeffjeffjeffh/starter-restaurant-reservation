@@ -48,5 +48,45 @@
     "people": 2,
     "created_at": "2020-12-10T08:31:32.326Z",
     "updated_at": "2020-12-10T08:31:32.326Z"
+  },
+  {
+    "first_name": "Jeff",
+    "last_name": "Harm",
+    "mobile_number": "555-555-0164",
+    "reservation_date": "2023-08-24",
+    "reservation_time": "20:00:00",
+    "people": 6,
+    "created_at": "2020-12-10T08:30:32.326Z",
+    "updated_at": "2020-12-10T08:30:32.326Z"
+  },
+  {
+    "first_name": "Amy",
+    "last_name": "Heindselman",
+    "mobile_number": "202-555-5555",
+    "reservation_date": "2023-08-25",
+    "reservation_time": "12:00:00",
+    "people": 3,
+    "created_at": "2020-12-10T08:30:32.326Z",
+    "updated_at": "2020-12-10T08:30:32.326Z"
+  },
+  {
+    "first_name": "Your",
+    "last_name": "Face",
+    "mobile_number": "345-555-1234",
+    "reservation_date": "2023-09-30",
+    "reservation_time": "14:00:00",
+    "people": 7,
+    "created_at": "2020-12-10T08:30:32.326Z",
+    "updated_at": "2020-12-10T08:30:32.326Z"
+  },
+  {
+    "first_name": "Hugh",
+    "last_name": "Jackman",
+    "mobile_number": "123-555-9989",
+    "reservation_date": "2023-08-24",
+    "reservation_time": "19:00:00",
+    "people": 5,
+    "created_at": "2020-12-10T08:30:32.326Z",
+    "updated_at": "2020-12-10T08:30:32.326Z"
   }
 ]

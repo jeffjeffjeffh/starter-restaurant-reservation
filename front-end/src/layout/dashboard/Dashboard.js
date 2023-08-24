@@ -1,9 +1,10 @@
 import React from "react";
 
-import ErrorAlert from "../utils/ErrorAlert";
-
 import Reservations from "./reservations/Reservations";
 import Tables from "./tables/Tables";
+import ErrorAlert from "../../utils/ErrorAlert";
+
+import "./Dashboard.css";
 
 /**
  * Defines the dashboard page.
@@ -13,26 +14,24 @@ import Tables from "./tables/Tables";
  */
 function Dashboard({
   date,
-  previousDateHandler,
-  nextDateHandler,
-  todayHandler,
+  goYesterdayHandler,
+  goTomorrowHandler,
+  goTodayHandler,
   reservations,
-  reservationsError,
-  reservationsChange,
   setReservationsChange,
+  reservationsError,
   tables,
-  tablesError,
-  tablesChange,
   setTablesChange,
+  tablesError,
 }) {
   // JSX
   return (
     <main>
       <h1>Dashboard</h1>
       <hr></hr>
-      <button onClick={todayHandler}>Today</button>
-      <button onClick={previousDateHandler}>Previous</button>
-      <button onClick={nextDateHandler}>Next</button>
+      <button onClick={goTodayHandler}>Today</button>
+      <button onClick={goYesterdayHandler}>Previous</button>
+      <button onClick={goTomorrowHandler}>Next</button>
       <div className="d-md-flex mb-3">
         <h4 className="mb-0">Reservations for {date}</h4>
       </div>
@@ -41,9 +40,7 @@ function Dashboard({
       ) : (
         <Reservations
           reservations={reservations}
-          reservationsChange={reservationsChange}
           setReservationsChange={setReservationsChange}
-          tablesChange={tablesChange}
           setTablesChange={setTablesChange}
         />
       )}

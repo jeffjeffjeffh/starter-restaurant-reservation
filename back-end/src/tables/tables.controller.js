@@ -68,7 +68,7 @@ function validateNewTable(req, res, next) {
 // Runs when updating a table with a new reservation,
 // after validating the reservation and table
 function validateSeatRequest(req, res, next) {
-  console.log("validateSeatRequest");
+  // console.log("validateSeatRequest");
   const { people, capacity, reservation_id } = res.locals;
 
   if (reservation_id !== null) {
@@ -90,7 +90,7 @@ function validateSeatRequest(req, res, next) {
 
 // Runs first when updating a table with a reservation
 async function validateReservation(req, res, next) {
-  console.log("validateReservation");
+  // console.log("validateReservation");
 
   if (!req.body.data) {
     return next({
@@ -109,7 +109,7 @@ async function validateReservation(req, res, next) {
   const { reservation_id } = req.body.data;
   const data = await service.readReservation(reservation_id);
 
-  console.log("data received from read reservation:", data);
+  // console.log("data received from read reservation:", data);
 
   if (data) {
     res.locals.people = data.people;
@@ -125,7 +125,7 @@ async function validateReservation(req, res, next) {
 
 // Runs second when updating a table with a reservation
 function reservationIsNotAlreadySeated(req, res, next) {
-  console.log("reservationIsNotAlreadySeated:", res.locals.status);
+  // console.log("reservationIsNotAlreadySeated:", res.locals.status);
   const { status } = res.locals;
 
   if (status === "seated") {
@@ -140,7 +140,7 @@ function reservationIsNotAlreadySeated(req, res, next) {
 
 // Runs third when updating a table with a reservation
 async function validateTable(req, res, next) {
-  console.log("validateTable");
+  // console.log("validateTable");
   const { table_id } = req.params;
 
   const response = await service.readTable(table_id);
@@ -158,7 +158,7 @@ async function validateTable(req, res, next) {
 
 // Runs first when clearing a table
 async function tableIsOccupied(req, res, next) {
-  console.log("tableIsOccupied");
+  // console.log("tableIsOccupied");
   const { table_id } = req.params;
 
   const response = await service.readTable(table_id);
@@ -181,19 +181,19 @@ async function tableIsOccupied(req, res, next) {
 
 /****************  Operations ***************/
 async function list(req, res) {
-  console.log("tables -> list");
+  // console.log("tables -> list");
   const data = await service.list();
   res.json({ data });
 }
 
 async function create(req, res) {
-  console.log("tables -> create:");
+  // console.log("tables -> create:");
   const data = await service.create(res.locals.newTable);
   res.status(201).json({ data });
 }
 
 async function update(req, res) {
-  console.log("tables -> update");
+  // console.log("tables -> update");
   const { reservation_id } = req.body.data;
   const { table_id } = req.params;
 
@@ -202,7 +202,7 @@ async function update(req, res) {
 }
 
 async function destroy(req, res) {
-  console.log("tables -> destroy");
+  // console.log("tables -> destroy");
   const { table_id } = req.params;
 
   await service.destroy(table_id);

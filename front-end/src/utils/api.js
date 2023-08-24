@@ -152,7 +152,7 @@ export async function clearTable(table_id) {
 export async function searchReservationsByMobileNumber(mobile_number) {
   const path = `${API_BASE_URL}/reservations?mobile_number=${mobile_number}`;
 
-  console.log(path);
+  // console.log(path);
 
   try {
     const response = await axios.get(path);

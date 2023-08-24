@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 
-import ErrorAlert from "../../utils/ErrorAlert";
+import ErrorAlert from "../../../utils/ErrorAlert";
 
 import "./TableForm.css";
 
-const { createTable } = require("../../utils/api");
+const { createTable } = require("../../../utils/api");
 
 export default function TableForm({ setTablesChange }) {
   const emptyForm = {

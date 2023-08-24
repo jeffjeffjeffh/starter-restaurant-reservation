@@ -1,0 +1,15 @@
+.searchForm {
+  margin: 1rem;
+}
+
+.searchForm label {
+  margin: 0 0.5rem 0 0;
+}
+
+.searchForm input {
+  margin: 0 0.5rem 0 0;
+}
+
+.searchForm button {
+  border-radius: 10%;
+}
