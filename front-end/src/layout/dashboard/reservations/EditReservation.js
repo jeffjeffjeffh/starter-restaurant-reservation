@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { formatAsDate, formatAsTime } from "../../../utils/date-time";
 import { getReservationById } from "../../../utils/api";
 
-import EditReservationForm from "./EditReservationForm";
+import ReservationForm from "./ReservationForm";
 import ErrorAlert from "../../../utils/ErrorAlert";
 
 export default function EditReservation({ lastPath, setReservationsChange }) {
@@ -38,9 +38,10 @@ export default function EditReservation({ lastPath, setReservationsChange }) {
         {submissionError ? (
           <ErrorAlert error={submissionError} />
         ) : (
-          <EditReservationForm
+          <ReservationForm
             lastPath={lastPath}
             reservation={reservation}
+            isNew={false}
             setReservationsChange={setReservationsChange}
             setSubmissionError={setSubmissionError}
           />

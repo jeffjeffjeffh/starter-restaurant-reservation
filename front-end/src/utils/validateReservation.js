@@ -74,13 +74,13 @@ function dayIsNotTuesday(date) {
   }
 }
 
-export default function validateNewReservation(reservation, isNew) {
+export default function validateReservation(reservation, isNew) {
   validatePeople(reservation.people);
   validateTime(reservation.reservation_time);
 
   // validateReservation is used both for creating and updating a reservation,
   // and test-08-frontend tries to edit a past reservation,
-  // we need to skip the date validation when editing.
+  // so we need to skip the date validation when editing.
   if (isNew) {
     validateDate(reservation.reservation_date);
   }

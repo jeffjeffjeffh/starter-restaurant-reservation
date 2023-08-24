@@ -1,12 +1,20 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 
-import { updateReservation } from "../../../utils/api";
-import validateNewReservation from "../../../utils/validateNewReservation";
+import { createReservation, updateReservation } from "../../../utils/api";
+import validateReservation from "../../../utils/validateReservation";
 import { formatAsDate } from "../../../utils/date-time";
 
 export default function ReservationForm({
-  reservation,
+  reservation = {
+    first_name: "",
+    last_name: "",
+    mobile_number: "",
+    reservation_date: "",
+    reservation_time: "",
+    people: 1,
+  },
+  isNew,
   setReservationsChange,
   setSubmissionError,
 }) {
@@ -18,21 +26,32 @@ export default function ReservationForm({
     setFormData({ ...formData, [target.id]: target.value });
   };
 
-  const date = formatAsDate(formData.reservation_date);
-  // console.log(date);
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     setSubmissionError(null);
-    try {
-      let isNew = false;
-      validateNewReservation(formData, isNew);
-      // console.log(formData);
-      await updateReservation(formData);
-      setReservationsChange(new Date());
-      history.push(`/dashboard/?date=${date}`);
-    } catch (error) {
-      setSubmissionError(error);
+
+    if (isNew) {
+      try {
+        validateReservation(formData, isNew);
+        await createReservation(formData);
+        setReservationsChange(new Date());
+        history.push(
+          `/dashboard/?date=${formatAsDate(formData.reservation_date)}`
+        );
+      } catch (error) {
+        setSubmissionError(error);
+      }
+    } else {
+      try {
+        validateReservation(formData, isNew);
+        await updateReservation(formData);
+        setReservationsChange(new Date());
+        history.push(
+          `/dashboard/?date=${formatAsDate(formData.reservation_date)}`
+        );
+      } catch (error) {
+        setSubmissionError(error);
+      }
     }
   };
 
