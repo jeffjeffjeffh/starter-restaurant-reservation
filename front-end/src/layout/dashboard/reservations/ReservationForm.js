@@ -5,6 +5,8 @@ import { createReservation, updateReservation } from "../../../utils/api";
 import validateReservation from "../../../utils/validateReservation";
 import { formatAsDate } from "../../../utils/date-time";
 
+import "./ReservationForm.css";
+
 export default function ReservationForm({
   reservation = {
     first_name: "",
